@@ -1,0 +1,22 @@
+name: trivy-scan
+ 
+on:
+  push: 
+   branches: ["master","prod"]
+ 
+jobs:
+  trivy-scan:
+    runs-on: ubuntu-latest
+ 
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+ 
+    - name: Install Trivy
+      run: |
+        wget https://github.com/aquasecurity/trivy/releases/download/v0.17.2/trivy_0.17.2_Linux-64bit.deb
+        sudo apt install ./trivy_0.17.2_Linux-64bit.deb
+ 
+    - name: Scan Repository with Trivy
+      run: |
+        trivy --exit-code 1 --no-progress --severity HIGH,CRITICAL ${GITHUB_REPOSITORY}
